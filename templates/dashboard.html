@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback Dashboard - SIES</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Chart.js for data visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <img src="https://siesascn.edu.in/images/sies_ascn_logo.jpg" alt="SIES College Logo" class="logo">
+            <h1>Faculty Feedback System</h1>
+        </div>
+    </header>
+    <nav>
+        <div class="container nav-content">
+            <ul>
+                <li><a href="{{ url_for('dashboard') }}">Home</a></li>
+                <li><a href="{{ url_for('dashboard') }}" class="active">Dashboard</a></li>
+                <li><a href="{{ url_for('logout') }}">Logout</a></li>
+            </ul>
+            <div class="user-info">
+                Welcome, <strong>{{ session.name }}</strong> (Role: {{ session.role|capitalize }})
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <h2>Faculty Feedback Dashboard</h2>
+        <p>Review feedback summaries and detailed reports.</p>
+
+        {% if teacher_data %}
+            {% for teacher_id, data in teacher_data.items() %}
+            <div class="teacher-report-card">
+                <div class="report-header">
+                    <h3>{{ data.name }}</h3>
+                    <div class="report-summary">
+                        <span>Overall Rating: <strong>{{ "%.2f"|format(data.overall_avg) }}/5.0</strong></span>
+                        <span>Total Responses: <strong>{{ data.num_responses }}</strong></span>
+                    </div>
+                </div>
+
+                <!-- EXPORT BUTTONS HAVE BEEN REMOVED FROM THIS SECTION -->
+                <div class="report-actions">
+                    <button class="btn btn-secondary" onclick="toggleDetails('{{ teacher_id }}')">View Details</button>
+                </div>
+
+                <div class="details-container" id="details-{{ teacher_id }}" style="display:none;">
+                    <h4>Average Ratings per Question</h4>
+                    <div class="chart-container">
+                        <canvas id="chart-{{ teacher_id }}"></canvas>
+                    </div>
+                    
+                    <h4>Detailed Feedback Responses</h4>
+                    <div class="table-wrapper">
+                        <table class="feedback-details-table">
+                            <thead>
+                                <tr>
+                                    <th>Student Name</th>
+                                    <th>Student ID</th>
+                                    {% for q_id in questions.keys() %}
+                                        <th title="{{ questions[q_id] }}">Q{{ loop.index }}</th>
+                                    {% endfor %}
+                                    <th>Comments</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for feedback in data.feedback_details %}
+                                <tr>
+                                    <td>{{ feedback.student_name }}</td>
+                                    <td>{{ feedback.student_id }}</td>
+                                    {% for q_id in questions.keys() %}
+                                        <td>{{ feedback[q_id] }}</td>
+                                    {% endfor %}
+                                    <td class="comments-cell">{{ feedback.comments if feedback.comments else '-' }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="alert alert-info">No feedback data available at the moment.</div>
+        {% endif %}
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 SIES College of Arts, Science & Commerce (Autonomous), Nerul.</p>
+        </div>
+    </footer>
+
+    <script>
+        function toggleDetails(teacherId) {
+            const detailsDiv = document.getElementById(`details-${teacherId}`);
+            if (detailsDiv.style.display === 'none') {
+                detailsDiv.style.display = 'block';
+            } else {
+                detailsDiv.style.display = 'none';
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', function () {
+            {% for teacher_id, data in teacher_data.items() %}
+                const ctx_{{ teacher_id }} = document.getElementById('chart-{{ teacher_id }}').getContext('2d');
+                new Chart(ctx_{{ teacher_id }}, {
+                    type: 'bar',
+                    data: {
+                        labels: [{% for i in range(1, questions|length + 1) %}'Q{{i}}',{% endfor %}],
+                        datasets: [{
+                            label: 'Average Rating (out of 5)',
+                            data: [
+                                {% for q_id in questions.keys() %}
+                                    {{ "%.2f"|format(data.avg_ratings[q_id]) }},
+                                {% endfor %}
+                            ],
+                            backgroundColor: 'rgba(0, 51, 102, 0.7)',
+                            borderColor: 'rgba(0, 51, 102, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 5
+                            }
+                        },
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let q_index = context.dataIndex;
+                                        let question_text = {{ questions.values()|list|tojson }}[q_index];
+                                        return `${question_text}: ${context.parsed.y}`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            {% endfor %}
+        });
+    </script>
+</body>
+</html>

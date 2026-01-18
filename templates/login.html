@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - SIES Faculty Feedback</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <img src="https://siesascn.edu.in/images/sies_ascn_logo.jpg" alt="SIES College Logo" class="logo">
+            <h1>Faculty Feedback System</h1>
+        </div>
+    </header>
+    <main class="login-page">
+    <div class="login-box login-card">
+        <h2>Login</h2>
+        <p>Select your role and enter your credentials.</p>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form action="{{ url_for('login') }}" method="POST">
+            <div class="form-group">
+                <label>I am a:</label>
+                <div class="role-selector">
+                    <div class="role-option">
+                        <input type="radio" id="student" name="login_type" value="student" required checked>
+                        <label for="student">Student</label>
+                    </div>
+                    <div class="role-option">
+                        <input type="radio" id="faculty" name="login_type" value="faculty">
+                        <label for="faculty">Faculty / HOD</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="username">Roll Number / Staff ID</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+    </div>
+</main>
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 SIES College of Arts, Science & Commerce (Autonomous), Nerul.</p>
+        </div>
+    </footer>
+</body>
+</html>

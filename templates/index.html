@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Feedback - SIES</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <img src="https://siesascn.edu.in/images/sies_ascn_logo.jpg" alt="SIES College Logo" class="logo">
+            <h1>Faculty Feedback System</h1>
+        </div>
+    </header>
+    <nav>
+        <div class="container nav-content">
+            <ul>
+                <li><a href="{{ url_for('feedback') }}" class="active">Feedback</a></li>
+                <li><a href="{{ url_for('logout') }}">Logout</a></li>
+            </ul>
+            <div class="user-info">
+                Welcome, <strong>{{ session.name }}</strong> ({{ session.class }})
+            </div>
+        </div>
+    </nav>
+    <main class="container">
+        <h2>Submit Faculty Feedback</h2>
+        <p>Your feedback is valuable for improving the quality of education.</p>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% if teachers %}
+        <form action="{{ url_for('feedback') }}" method="POST" class="feedback-form">
+            <div class="form-group">
+                <label for="teacher">Select Faculty to Review:</label>
+                <select name="teacher" id="teacher" required>
+                    <option value="" disabled selected>-- Choose a Teacher --</option>
+                    {% for teacher in teachers %}
+                    <option value="{{ teacher.id }}">{{ teacher.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="ratings-grid">
+                {% for q_id, q_text in questions.items() %}
+                <div class="question-card">
+                    <p class="question-text">{{ loop.index }}. {{ q_text }}</p>
+                    <div class="rating-group">
+                        <label>Poor</label>
+                        {% for i in range(1, 6) %}
+                        <input type="radio" name="{{ q_id }}" id="{{ q_id }}-{{ i }}" value="{{ i }}" required>
+                        <label for="{{ q_id }}-{{ i }}">{{ i }}</label>
+                        {% endfor %}
+                        <label>Excellent</label>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="form-group">
+                <label for="comments">Suggestions / Remarks (Optional):</label>
+                <textarea name="comments" id="comments" rows="4" placeholder="Enter any additional comments here..."></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Submit Feedback</button>
+        </form>
+        {% else %}
+        <div class="alert alert-success">
+            You have already submitted feedback for all available teachers this semester. Thank you!
+        </div>
+        {% endif %}
+
+    </main>
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 SIES College of Arts, Science & Commerce (Autonomous), Nerul.</p>
+        </div>
+    </footer>
+</body>
+</html>

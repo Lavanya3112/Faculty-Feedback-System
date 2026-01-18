@@ -1,0 +1,359 @@
+/* General Body & Typography */
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    background-color: #f4f7fc;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+h1, h2, h3, h4 {
+    color: #003366;
+}
+
+/* Header */
+header {
+    background-color: #003366;
+    color: white;
+    padding: 1rem 0;
+    border-bottom: 5px solid #0055a5;
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo {
+    height: 60px;
+    margin-right: 20px;
+}
+
+/* --- THIS IS THE FIX --- */
+header h1 {
+    color: white; /* Overrides the general h1 rule to make text visible */
+    margin: 0;    /* Removes any default browser margins */
+    font-size: 1.8rem;
+}
+
+/* Navigation */
+nav {
+    background-color: #ffffff;
+    border-bottom: 1px solid #ddd;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+.nav-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+}
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+nav ul li a {
+    display: block;
+    padding: 1rem 1.5rem;
+    text-decoration: none;
+    color: #003366;
+    font-weight: 500;
+    transition: background-color 0.3s;
+}
+nav ul li a:hover, nav ul li a.active {
+    background-color: #eef2f7;
+    color: #0055a5;
+}
+.user-info {
+    font-size: 0.9rem;
+    color: #555;
+}
+
+/* Main Content */
+main {
+    flex-grow: 1;
+    padding: 2rem 0;
+}
+
+/* Login Form */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 4rem;
+}
+.login-card {
+    background: #fff;
+    padding: 2.5rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 450px;
+    text-align: center;
+}
+.login-card h2 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+}
+.login-card p {
+    margin-bottom: 2rem;
+    color: #666;
+}
+
+/* Form Styles */
+.form-group {
+    margin-bottom: 1.5rem;
+    text-align: left;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+input[type="text"],
+input[type="password"],
+select,
+textarea {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 1rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+input[type="text"]:focus,
+input[type="password"]:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: #0055a5;
+    box-shadow: 0 0 0 3px rgba(0, 85, 165, 0.2);
+}
+
+.btn {
+    display: inline-block;
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    transition: background-color 0.3s, transform 0.2s;
+}
+.btn-primary {
+    background-color: #003366;
+    color: white;
+    width: 100%;
+}
+.btn-primary:hover {
+    background-color: #0055a5;
+    transform: translateY(-2px);
+}
+
+/* Alerts */
+.alert {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 5px;
+    border: 1px solid transparent;
+}
+.alert-danger {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    color: #721c24;
+}
+.alert-success {
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+    color: #155724;
+}
+.alert-info {
+    background-color: #d1ecf1;
+    border-color: #bee5eb;
+    color: #0c5460;
+}
+
+/* Feedback Form Specific */
+.feedback-form {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+.ratings-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+.question-card {
+    background: #f9fafc;
+    border: 1px solid #eef2f7;
+    padding: 1.5rem;
+    border-radius: 5px;
+}
+.question-text {
+    margin-top: 0;
+    font-weight: 500;
+}
+.rating-group {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.rating-group input[type="radio"] {
+    display: none;
+}
+.rating-group label {
+    font-size: 0.9rem;
+    color: #666;
+    cursor: pointer;
+}
+.rating-group input[type="radio"] + label {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 2px solid #ccc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s;
+}
+.rating-group input[type="radio"]:checked + label {
+    background-color: #003366;
+    border-color: #003366;
+    color: white;
+}
+.rating-group input[type="radio"]:hover + label {
+    border-color: #0055a5;
+}
+
+/* Dashboard */
+.teacher-report-card {
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+}
+.report-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+}
+.report-summary span {
+    margin-left: 2rem;
+    font-size: 1rem;
+    color: #555;
+}
+.report-actions {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
+.btn-export {
+    background-color: #17a2b8;
+    color: white;
+}
+.btn-export:hover {
+    background-color: #138496;
+}
+.details-container {
+    padding-top: 1rem;
+    border-top: 1px solid #eee;
+}
+.chart-container {
+    max-width: 800px;
+    margin: 1rem auto 2rem auto;
+}
+.table-wrapper {
+    overflow-x: auto;
+}
+.feedback-details-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+.feedback-details-table th, .feedback-details-table td {
+    padding: 0.8rem;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+.feedback-details-table th {
+    background-color: #f2f2f2;
+}
+.feedback-details-table td.comments-cell {
+    min-width: 250px;
+    font-size: 0.9rem;
+}
+
+/* Footer */
+footer {
+    background-color: #003366;
+    color: #eef2f7;
+    text-align: center;
+    padding: 1.5rem 0;
+    margin-top: auto;
+}
+
+@media (min-width: 768px) {
+    .ratings-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+/* Styles for the role selector */
+.role-selector {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-top: 0.5rem;
+}
+
+.role-option {
+    display: flex;
+    align-items: center;
+}
+
+.role-option input[type="radio"] {
+    margin-right: 0.5rem;
+}
+
+.role-option label {
+    margin-bottom: 0;
+    cursor: pointer;
+    font-weight: normal;
+}
+/* Login page background */
+.login-page {
+  min-height: 100vh;
+  background: url("/static/college.jpg") no-repeat center center / cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
