@@ -28,12 +28,30 @@ def close_db(exception):
         db.close()
 
 def ensure_db():
-    """Create database automatically on first run (Render free-tier fix)"""
-    if not os.path.exists(app.config['DATABASE']):
-        db = get_db()
-        with app.open_resource('schema.sql', mode='r') as f:
+    db = sqlite3.connect(DB_PATH)
+    cursor = db.cursor()
+
+    # Check if students table exists
+    cursor.execute("""
+        SELECT name FROM sqlite_master 
+        WHERE type='table' AND name='students'
+    """)
+    table_exists = cursor.fetchone()
+
+    # If table missing OR empty → re-run schema.sql
+    if not table_exists:
+        with open(os.path.join(BASE_DIR, 'schema.sql'), 'r') as f:
             db.executescript(f.read())
         db.commit()
+    else:
+        cursor.execute("SELECT COUNT(*) FROM students")
+        count = cursor.fetchone()[0]
+        if count == 0:
+            with open(os.path.join(BASE_DIR, 'schema.sql'), 'r') as f:
+                db.executescript(f.read())
+            db.commit()
+
+    db.close()
 
 # ------------------ QUESTIONS ------------------
 
@@ -184,3 +202,4 @@ def logout():
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
+
