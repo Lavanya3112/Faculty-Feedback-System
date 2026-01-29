@@ -28,16 +28,24 @@ def close_db(exception):
         db.close()
 
 def ensure_db():
-    db = sqlite3.connect(DB_PATH)
+    db_path = app.config['DATABASE']
+    db = sqlite3.connect(db_path)
     cursor = db.cursor()
 
     # Check if students table exists
     cursor.execute("""
-        SELECT name FROM sqlite_master 
+        SELECT name FROM sqlite_master
         WHERE type='table' AND name='students'
     """)
     table_exists = cursor.fetchone()
 
+    # If table missing → create DB
+    if not table_exists:
+        with open(os.path.join(BASE_DIR, 'schema.sql'), 'r') as f:
+            db.executescript(f.read())
+        db.commit()
+
+    db.close()
     # If table missing OR empty → re-run schema.sql
     if not table_exists:
         with open(os.path.join(BASE_DIR, 'schema.sql'), 'r') as f:
