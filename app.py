@@ -3,7 +3,6 @@ import click
 import os
 from flask import Flask, render_template, request, redirect, url_for, session, flash, g
 from functools import wraps
-from datetime import datetime
 
 # ------------------ APP CONFIG ------------------
 
@@ -28,17 +27,13 @@ def close_db(exception):
     if db is not None:
         db.close()
 
-def init_db():
-    with app.app_context():
+def ensure_db():
+    """Create database automatically on first run (Render free-tier fix)"""
+    if not os.path.exists(app.config['DATABASE']):
         db = get_db()
         with app.open_resource('schema.sql', mode='r') as f:
             db.executescript(f.read())
         db.commit()
-
-@app.cli.command('init-db')
-def init_db_command():
-    init_db()
-    click.echo('Initialized the database.')
 
 # ------------------ QUESTIONS ------------------
 
@@ -73,6 +68,8 @@ def login_required(role=None):
 
 @app.route('/', methods=['GET', 'POST'])
 def login():
+    ensure_db()  # 🔥 THIS FIXES THE 500 ERROR
+
     if request.method == 'POST':
         login_type = request.form.get('login_type')
         username = request.form.get('username')
